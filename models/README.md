@@ -1,0 +1,1 @@
+This folder is copied from https://github.com/acids-ircam/ddsp_pytorch/tree/master/code/models
