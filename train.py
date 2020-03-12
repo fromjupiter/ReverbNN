@@ -17,16 +17,16 @@ from ddsp.loss import MSSTFTLoss
 from utils.plot import plot_batch_detailed
 
 # Default path on my computer
-default_path = '/Users/esling/Datasets/instruments_solo_recordings/'
+default_path = './dataset'
 # Define arguments
 parser = argparse.ArgumentParser()
 # Data arguments
 parser.add_argument('--path',           type=str,   default=default_path,   help='Path to the dataset')
 parser.add_argument('--output',         type=str,   default='outputs',      help='Output result directory')
-parser.add_argument('--dataset',        type=str,   default='violin_simple',help='Name of the dataset')
+parser.add_argument('--dataset',        type=str,   default='mine_guitarset',help='Name of the dataset')
 parser.add_argument('--nbworkers',      type=int,   default=1,              help='Number of parallel workers (multithread)')
 # Preprocessing arguments
-parser.add_argument('--sr',             type=int,   default=16000,          help='Sample rate of the signal')
+parser.add_argument('--sr',             type=int,   default=44100,          help='Sample rate of the signal')
 parser.add_argument('--f0_estimate',    type=str,   default='crepe',        help='Type of F0 estimate')
 parser.add_argument('--fft_scales',     type=list,  default=[64, 6],        help='Minimum and number of scales')
 parser.add_argument('--smooth_kernel',  type=int,   default=8,              help='Size of the smoothing kernel')
@@ -64,7 +64,7 @@ parser.add_argument('--lr',             type=float, default=2e-4,           help
 parser.add_argument('--check_exists',   type=int,   default=0,              help='Check if model exists')
 parser.add_argument('--time_limit',     type=int,   default=0,              help='Maximum time to train (in minutes)')
 # CUDA arguments
-parser.add_argument('--device',         type=str,   default='cpu',          help='Device for CUDA')
+parser.add_argument('--device',         type=str,   default='cuda',          help='Device for CUDA')
 args = parser.parse_args()
 # Track start time (for HPC)
 start_time = time.time()
@@ -120,7 +120,7 @@ else:
     args.input_size = train_loader.dataset.input_size
 #%% Take fixed batch for plot purposes
 fixed_audio, fixed_f0, fixed_loudness, fixed_fft = next(iter(test_loader))
-fixed_audio, fixed_f0, fixed_loudness, fixed_fft = fixed_audio.to(args.device), fixed_f0.to(args.device), fixed_loudness.to(args.device), fixed_fft
+# fixed_audio, fixed_f0, fixed_loudness, fixed_fft = fixed_audio.to(args.device), fixed_f0.to(args.device), fixed_loudness.to(args.device), fixed_fft
 fixed_batch = (fixed_audio, fixed_f0, fixed_loudness, fixed_fft)
 plot_batch_detailed(fixed_batch)
 # Set latent dims to output dims

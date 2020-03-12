@@ -173,7 +173,7 @@ Load any given dataset and return DataLoaders
 ###################
 """
 def load_dataset(args, **kwargs):
-    if (args.dataset in ['violin', 'violin_simple']):
+    if (args.dataset in ['violin', 'violin_simple', 'mine_guitarset']):
         dset_train = AudioFeaturesDataset(args.path + '/' + args.dataset, args, **kwargs)
         dset_valid = copy.deepcopy(dset_train).switch_set('valid')
         dset_test = copy.deepcopy(dset_train).switch_set('test')
@@ -197,11 +197,12 @@ if __name__ == '__main__':
     # Define arguments
     parser = argparse.ArgumentParser()
     # Data arguments
-    parser.add_argument('--path', type=str, default='/Users/esling/Datasets/diva_dataset', help='')
-    parser.add_argument('--dataset', type=str, default='toy', help='')
+    parser.add_argument('--path', type=str, default='./dataset', help='')
+    parser.add_argument('--dataset', type=str, default='mine_guitarset', help='')
     parser.add_argument('--data', type=str, default='mel', help='')
     parser.add_argument('--batch_size', type=int, default=64, help='')
     parser.add_argument('--epochs', type=int, default=100, help='')
+    parser.add_argument('--sr', type=int, default=44100, help='')
     args = parser.parse_args()
     train_loader, valid_loader, test_loader, args = load_dataset(args)
     # Take fixed batch (train)
