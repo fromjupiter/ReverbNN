@@ -141,3 +141,4 @@ class Mul(Synth):
     def n_parameters(self):
         """ Total number of parameters for all flows """
         return sum([mod.n_parameters() for mod in self._modules.values()])
+
