@@ -29,12 +29,12 @@ class MSSTFTLoss(Loss):
             sequence_size (int) : size of the conditioning sequence
     """
     
-    def __init__(self, scales, overlap=0.75):
+    def __init__(self, args, overlap=0.75):
         super(MSSTFTLoss, self).__init__()
         self.apply(self.init_parameters)
-        self.scales = scales
+        self.scales = args.scales
         self.overlap = overlap
-        self.windows = nn.ParameterList(nn.Parameter(torch.from_numpy(np.hanning(scale)).float(), requires_grad=False) for scale in self.scales)
+        self.windows = nn.ParameterList(nn.Parameter(torch.from_numpy(np.hanning(scale)).float().to(args.device), requires_grad=False) for scale in self.scales)
     
     def init_parameters(self, m):
         pass
@@ -43,7 +43,7 @@ class MSSTFTLoss(Loss):
         stfts = []
         # First compute multiple STFT for x
         for i, scale in enumerate(self.scales):
-            cur_fft = torch.stft(x, n_fft=scale, window=self.windows[i], hop_length=int((1-self.overlap)*scale), center=False)
+            cur_fft = torch.stft(x, n_fft=scale, window=self.windows[i], hop_length=int((1-self.overlap)*scale), center=False).to(stfts_orig[i].device)
             stfts.append(amp(cur_fft))
         # Compute loss 
         lin_loss = sum([torch.mean(abs(stfts_orig[i][j] - stfts[i][j])) for j in range(len(stfts[i])) for i in range(len(stfts))])

@@ -33,7 +33,7 @@ parser.add_argument('--smooth_kernel',  type=int,   default=8,              help
 # DDSP parameters
 parser.add_argument('--n_partial',      type=int,   default=50,             help='Number of partials')
 parser.add_argument('--filter_size',    type=int,   default=64,             help='Size of the filter')
-parser.add_argument('--block_size',     type=int,   default=160,            help='Number of samples in blocks')
+parser.add_argument('--block_size',     type=int,   default=80,            help='Number of samples in blocks')
 parser.add_argument('--kernel_size',    type=int,   default=15,             help='Size of the kernel')
 parser.add_argument('--sequence_size',  type=int,   default=200,            help='Size of the sequence')
 parser.add_argument('--synth_type',     type=str,   default='basic',        help='Size of the sequence')
@@ -156,7 +156,7 @@ optimizer = optim.Adam(model.parameters(), lr=args.lr)
 scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=20, verbose=True, threshold=1e-7)
 # Loss
 if (args.loss == 'msstft'):
-    loss = MSSTFTLoss(args.scales)
+    loss = MSSTFTLoss(args)
 else:
     raise Exception('Unknown loss ' + args.loss)
 
